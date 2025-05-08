@@ -4,62 +4,90 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Login - Personalized Blogging Platform</title>
+    <title>Welcome - Personalized Blogging Platform</title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
-            background-color: #ffffff;
-            color: #172029;
             margin: 0;
             padding: 0;
-        }
-
-        .container {
-            max-width: 420px;
-            margin: 100px auto;
-            padding: 40px;
-            border: 1px solid #0d1247;
-            border-radius: 8px;
-            background-color: #f4f8fb;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        h2 {
-            text-align: center;
+            background-color: #ffffff;
             color: #0d1247;
-            margin-bottom: 20px;
         }
 
-        form input, form button {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #0d1247;
-            border-radius: 4px;
-            font-size: 1rem;
+        nav {
+            background-color: #0d1247;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
         }
 
-        form button {
+        nav h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .content h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .content p {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            padding: 12px 25px;
             background-color: #0d1247;
             color: white;
             border: none;
-            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1rem;
+            text-decoration: none;
         }
 
-        form button:hover {
+        .cta-button:hover {
             background-color: #0d3f91;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Login to Your Account</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Login</button>
-        </form>
+    <nav>
+        <h1>Blogging Platform</h1>
+        <div>
+            <span>Welcome, {{ user.username }}</span>
+            <a href="{% url 'home' %}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="content">
+        <h2>Welcome to Your Personalized Dashboard</h2>
+        <p>Track your goals, write inspiring blogs, and stay consistent with your habits.</p>
+        <a href="#" class="cta-button">Start Writing</a>
+        <a href="#" class="cta-button" style="margin-left: 15px;">View Your Goals</a>
     </div>
+
     <script src="{% static 'main.js' %}"></script>
 </body>
 </html>

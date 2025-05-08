@@ -2,8 +2,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Login - Personalized Blogging Platform</title>
     <style>
         body {
@@ -54,6 +54,21 @@
         form button:hover {
             background-color: #0D47A1;
         }
+
+        .form-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .form-footer a {
+            color: #1A237E;
+            text-decoration: none;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -64,6 +79,9 @@
             {{ form.as_p }}
             <button type="submit">Login</button>
         </form>
+        <div class="form-footer">
+            Don't have an account? <a href="{% url 'register' %}">Register here</a>
+        </div>
     </div>
     <script src="{% static 'main.js' %}"></script>
 </body>
