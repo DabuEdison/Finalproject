@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-cof+*v-uge1w7^$bxrt!=nw(xzml%c@ul05vya=bx3zsx$yenz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'LAPTOP-2DUHQRD4']
 
 
 # Application definition
@@ -37,9 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'final_app',
     'accounts',
+    'rest_framework',
+    'rest_framework_simplejwt',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -71,6 +73,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'final_app.wsgi.application'
 
 
+
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -91,6 +94,13 @@ AUTH_PASSWORD_VALIDATORS = [
         'OPTIONS': {'min_length': 6},  # You can lower this if needed
     }
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
 
 
 

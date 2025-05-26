@@ -10,14 +10,12 @@ class RegisterForm(forms.ModelForm):
         model = User
         fields = ['username', 'email', 'password']
 
-    def clean(self):
-        cleaned_data = super().clean()
-        password = cleaned_data.get("password")
-        confirm = cleaned_data.get("confirm_password")
-        if password and confirm and password != confirm:
-            raise forms.ValidationError("Passwords do not match")
-        return cleaned_data
+    def validate_passwords_match(self):
+        if self.cleaned_data.get('password') != self.cleaned_data.get('confirm_password'):
+            self.add_error('confirm_password', "Passwords do not match.")
 
-class LoginForm(AuthenticationForm):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput())
+    def is_valid(self):
+        valid = super().is_valid()
+        if valid:
+            self.validate_passwords_match()
+        return super().is_valid()
