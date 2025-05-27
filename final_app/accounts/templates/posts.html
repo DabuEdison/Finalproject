@@ -1,0 +1,329 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Personal Blog</title>
+  <style>
+    /* Your existing styles (trimmed here for brevity) */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #f8f9fa;
+      color: #212529;
+    }
+    nav {
+      background-color: #0d1247;
+      padding: 15px 30px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav h1 {
+      margin: 0;
+      font-size: 1.6rem;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 500;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    h2 {
+      margin-top: 40px;
+      font-size: 1.5rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      overflow: hidden;
+    }
+    th, td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+      vertical-align: top;
+    }
+    th {
+      background-color: #0d1247;
+      color: white;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Make inputs readonly look like plain text */
+    .readonly-input, .readonly-textarea {
+      border: none;
+      background-color: transparent;
+      color: #212529;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 1rem;
+      resize: none;
+      width: 100%;
+      pointer-events: none; /* disable clicking */
+    }
+
+    /* Action buttons styling */
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .actions button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .actions .edit-btn {
+      background-color: #0d1247;
+      color: white;
+    }
+    .actions .edit-btn:hover {
+      background-color: #0d3f91;
+    }
+    .actions .delete-btn {
+      background-color: #c0392b;
+      color: white;
+    }
+    .actions .delete-btn:hover {
+      background-color: #e74c3c;
+    }
+    .no-posts {
+      font-style: italic;
+      color: #666;
+      margin-top: 15px;
+    }
+    .post-date {
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    /* Modal overlay */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background-color: white;
+      padding: 20px 30px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .modal-content h2 {
+      margin-top: 0;
+    }
+    .modal-content input,
+    .modal-content textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .modal-buttons button {
+      padding: 10px 16px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+    .modal-buttons .save-btn {
+      background-color: #0d1247;
+      color: white;
+    }
+    .modal-buttons .save-btn:hover {
+      background-color: #0d3f91;
+    }
+    .modal-buttons .cancel-btn {
+      background-color: #ccc;
+      color: #333;
+    }
+    .modal-buttons .cancel-btn:hover {
+      background-color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>My Personal Blog</h1>
+    <div>
+      <span>Welcome, {{ user.username }}</span>
+      <a href="{% url 'login' %}">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- Create New Post button -->
+    <button 
+      onclick="toggleCreatePost()" 
+      style="margin-bottom: 20px; padding: 10px 16px; background-color: #0d1247; color: white; border: none; border-radius: 5px; font-size: 0.95rem; cursor: pointer;">
+      Create New Post
+    </button>
+
+    <!-- Hidden create post form -->
+<div id="create-post-form" class="create-post" style="display: none; margin-bottom: 40px;">
+  <h2>Create New Post</h2>
+  <form method="POST" action="{% url 'posts' %} style="display: flex; flex-direction: column; gap: 15px; max-width: 600px;">
+    {% csrf_token %}
+    <input 
+      type="text" 
+      name="title" 
+      placeholder="Enter your post title..." 
+      required
+      style="padding: 10px; font-size: 1rem; border: 1px solid #ccc; border-radius: 5px; font-family: 'Segoe UI', sans-serif;"
+    >
+    <textarea 
+      name="content" 
+      rows="4" 
+      placeholder="Write your post..." 
+      required
+      style="padding: 10px; font-size: 1rem; border: 1px solid #ccc; border-radius: 5px; font-family: 'Segoe UI', sans-serif; resize: vertical;"
+    ></textarea>
+    <button 
+      type="submit" 
+      name="create_post"
+      style="align-self: flex-start; padding: 10px 20px; background-color: #0d1247; color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; transition: background-color 0.2s ease;"
+      onmouseover="this.style.backgroundColor='#0d3f91';"
+      onmouseout="this.style.backgroundColor='#0d1247';"
+    >
+      Publish
+    </button>
+  </form>
+</div>
+    
+    <div id="posts-list">
+    <h2>Your Posts</h2>
+    {% if posts %}
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Date</th>
+            <th style="width: 150px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for post in posts %}
+            <tr>
+              <td>
+                <input type="text" class="readonly-input" value="{{ post.title }}" readonly>
+              </td>
+              <td>
+                <textarea rows="3" class="readonly-textarea" readonly>{{ post.content }}</textarea>
+              </td>
+              <td class="post-date">
+                {{ post.created_at|date:"M d, Y H:i" }}
+              </td>
+              <td class="actions">
+                <button class="edit-btn" data-id="{{ post.id }}" data-title="{{ post.title|escapejs }}" data-content="{{ post.content|escapejs }}">
+                  Edit
+                </button>
+
+                <form method="POST" style="display:inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="post_id" value="{{ post.id }}">
+                  <button type="submit" name="delete_post" class="delete-btn" onclick="return confirm('Are you sure you want to delete this post?');">Delete</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="no-posts">You haven't written any posts yet.</p>
+    {% endif %}
+  </div>
+
+  <!-- Modal for editing post -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <h2>Edit Post</h2>
+      <form method="POST" id="editForm">
+        {% csrf_token %}
+        <input type="hidden" name="post_id" id="modal-post-id" value="">
+        <input type="text" name="title" id="modal-title" required placeholder="Enter post title...">
+        <textarea name="content" id="modal-content" rows="5" required placeholder="Write your post content..."></textarea>
+        <div class="modal-buttons">
+          <button type="submit" name="update_post" class="save-btn">Save</button>
+          <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Toggle create post form
+    function toggleCreatePost() {
+      const form = document.getElementById('create-post-form');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Modal controls
+    const modal = document.getElementById('editModal');
+    const modalForm = document.getElementById('editForm');
+    const modalPostId = document.getElementById('modal-post-id');
+    const modalTitle = document.getElementById('modal-title');
+    const modalContent = document.getElementById('modal-content');
+
+    function openModal(postId, title, content) {
+      modalPostId.value = postId;
+      modalTitle.value = title;
+      modalContent.value = content;
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+
+    // Close modal when clicking outside content
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        closeModal();
+      }
+    }
+
+    // Attach click event to all edit buttons
+    document.querySelectorAll('.edit-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        const id = button.getAttribute('data-id');
+        const title = button.getAttribute('data-title');
+        const content = button.getAttribute('data-content');
+        openModal(id, title, content);
+      });
+    });
+  </script>
+</body>
+</html>
