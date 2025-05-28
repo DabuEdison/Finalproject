@@ -60,3 +60,22 @@
 | GET    | `/api/comments/{id}/` | Retrieve a single comment | Header: `Authorization: Bearer <token>` | Comment detail JSON      |
 | PUT    | `/api/comments/{id}/` | Update a comment          | `{ "content": "" }`             | Updated comment JSON     |
 | DELETE | `/api/comments/{id}/` | Delete a comment          | Header: `Authorization: Bearer <token>` | 204 No Content           |
+
+## Activity 7: Rate Limiting
+
+### Features
+- Custom rate limiting decorator to limit incoming requests per client (user or IP).
+- Limits requests to 5 per 60 seconds by default (configurable).
+- Returns HTTP 429 Too Many Requests when limit exceeded.
+- Includes informative JSON error message.
+- Supports both authenticated users and anonymous clients (by IP address).
+
+### API Endpoints with Rate Limiting
+
+| Method | Endpoint                           | Description                                    | Request Headers                                   | Sample Response                                      |
+|--------|----------------------------------|------------------------------------------------|--------------------------------------------------|------------------------------------------------------|
+| GET    | `http://127.0.0.1:8000/api/me/` | Retrieve authenticated user's profile (rate limited) | `Authorization: Bearer <access_token>`            | **Success (200):**<br>```json {"id":1,"username":"user1","email":"user1@example.com"}```<br><br>**Rate Limit Exceeded (429):**<br>```json {"detail": "Rate limit exceeded. Try again later."}``` |
+
+### Rate Limit Policy
+- Maximum of 5 requests per 60 seconds per user or IP address.
+- When exceeded, API returns status code 429 and blocks further requests until the window resets.

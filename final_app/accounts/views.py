@@ -3,6 +3,10 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .models import BlogPost, Goal
+from rest_framework import generics, permissions
+from .serializers import UserSerializer
+from django.utils.decorators import method_decorator
+from .utils import rate_limit
 
 def register_view(request):
     if request.method == 'POST':
@@ -96,4 +100,12 @@ def posts_view(request):
     posts = BlogPost.objects.filter(author=user)
     return render(request, 'posts.html', {'posts': posts})
 
+
+@method_decorator(rate_limit(max_requests=5, window_seconds=60), name='dispatch')
+class ProfileView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
 
