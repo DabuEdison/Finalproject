@@ -36,11 +36,14 @@ class BlogPostSerializer(serializers.ModelSerializer):
 class GoalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Goal
-        fields = ['id', 'description', 'completed', 'due_date', 'created_at', 'user']
-        read_only_fields = ['id', 'created_at', 'user']
-
+        fields = ['id', 'user', 'title', 'description', 'date_created']
+        read_only_fields = ['id', 'user', 'date_created']
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ['id', 'post', 'content', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+
+

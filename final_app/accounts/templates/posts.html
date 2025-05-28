@@ -194,7 +194,7 @@
     <!-- Hidden create post form -->
 <div id="create-post-form" class="create-post" style="display: none; margin-bottom: 40px;">
   <h2>Create New Post</h2>
-  <form method="POST" action="{% url 'posts' %} style="display: flex; flex-direction: column; gap: 15px; max-width: 600px;">
+  <form method="POST" action="{% url 'posts' %}" style="display: flex; flex-direction: column; gap: 15px; max-width: 600px;">
     {% csrf_token %}
     <input 
       type="text" 

@@ -14,13 +14,12 @@ class BlogPost(models.Model):
 
 class Goal(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200, default='Untitled Goal')
     description = models.TextField()
-    completed = models.BooleanField(default=False)
-    due_date = models.DateField(null=True, blank=True) 
-    created_at = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.description
+        return self.title
 
 
 class Comment(models.Model):

@@ -237,7 +237,7 @@
               <textarea rows="3" class="readonly-textarea" readonly>{{ goal.description }}</textarea>
             </td>
             <td class="goal-date">
-              {{ goal.created_at|date:"M d, Y H:i" }}
+              {{ goal.date_created|date:"M d, Y H:i" }}
             </td>
             <td class="actions">
               <button class="edit-btn" data-id="{{ goal.id }}" data-title="{{ goal.title|escapejs }}" data-description="{{ goal.description|escapejs }}">

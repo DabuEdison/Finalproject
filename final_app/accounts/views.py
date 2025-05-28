@@ -37,7 +37,7 @@ def goals_view(request):
             title = request.POST.get('title')
             description = request.POST.get('description')
             Goal.objects.create(user=request.user, title=title, description=description)
-            return redirect('goals')  # Refresh page to show new goal
+            return redirect('goals')  
 
         elif 'update_goal' in request.POST:
             goal_id = request.POST.get('goal_id')
@@ -51,9 +51,10 @@ def goals_view(request):
             Goal.objects.filter(id=goal_id, user=request.user).delete()
             return redirect('goals')
 
-    # For GET request, load user's goals
-    goals = Goal.objects.filter(user=request.user).order_by('-created_at')
+    # GET request
+    goals = Goal.objects.filter(user=request.user).order_by('-date_created')
     return render(request, 'goals.html', {'goals': goals})
+
 
 @login_required
 def posts_view(request):
